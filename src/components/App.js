@@ -4,6 +4,7 @@ import fetchImages from '../services/api-service';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
+import Modal from './Modal';
 
 export default class App extends Component {
   static propTypes = {
@@ -14,7 +15,8 @@ export default class App extends Component {
     searchQuery: '',
     page: 1,
     images: [],
-    loading: false,
+    showModal: null,
+    alt: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -26,7 +28,6 @@ export default class App extends Component {
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
       try {
-        this.setState({ loading: true, images: [] });
         const images = await fetchImages(nextSearch, nextPage);
         if (!images.length) {
         }
@@ -45,6 +46,7 @@ export default class App extends Component {
     if (this.state.searchQuery === searchQuery) {
       return;
     }
+    this.resetState();
     this.setState({ searchQuery });
   };
 
@@ -56,8 +58,24 @@ export default class App extends Component {
 
   handleImageClick = (largeImageUrl, tags) => {
     this.setState({
-      imageClick: largeImageUrl,
+      showModal: largeImageUrl,
       alt: tags,
+    });
+  };
+
+  toggleModal = () => {
+    this.setState({
+      showModal: null,
+    });
+  };
+
+  resetState = () => {
+    this.setState({
+      searchQuery: '',
+      page: 1,
+      images: [],
+      showModal: null,
+      alt: null,
     });
   };
 
@@ -69,6 +87,13 @@ export default class App extends Component {
           images={this.state.images}
           onImageClick={this.handleImageClick}
         />
+        {this.state.showModal && (
+          <Modal
+            showModal={this.state.showModal}
+            tags={this.state.alt}
+            onClose={this.toggleModal}
+          />
+        )}
         {this.state.images.length > 0 && <Button onClick={this.loadMoBtn} />}
       </div>
     );
