@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import fetchImages from '../services/api-service';
 import Searchbar from './Searchbar';
 import ImageGallery from './ImageGallery';
 import Button from './Button';
 import Modal from './Modal';
+import Spinner from './Loader';
 
 export default class App extends Component {
   static propTypes = {
@@ -16,7 +18,9 @@ export default class App extends Component {
     page: 1,
     images: [],
     showModal: null,
+    loading: false,
     alt: null,
+    error: null,
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -28,15 +32,33 @@ export default class App extends Component {
 
     if (prevSearch !== nextSearch || prevPage !== nextPage) {
       try {
+        this.setState({ loading: true });
         const images = await fetchImages(nextSearch, nextPage);
         if (!images.length) {
+          // toast.dismiss();
+          // toast.configure();
+          toast.info('Check the correctness of the input', {
+            position: toast.POSITION.TOP_RIGHT,
+            theme: 'colored',
+          });
+          //   toast.info('Check the correctness of the input', {
+          //     // theme: 'colored',
+          //     // position: 'top-right',
+          //   });
         }
         this.setState(prevState => ({
           images: [...prevState.images, ...images],
         }));
-        console.log(images);
       } catch (error) {
+        this.setState({ error });
+        toast.error(this.state.error.message, { theme: 'colored' });
       } finally {
+        if (prevState.images.length > 10) {
+          window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+          });
+        }
         this.setState({ loading: false });
       }
     }
@@ -75,27 +97,40 @@ export default class App extends Component {
       page: 1,
       images: [],
       showModal: null,
+      loading: false,
       alt: null,
+      error: null,
     });
   };
 
   render() {
+    const { images, alt, showModal, loading } = this.state;
+    const { handleFormSubmit, handleImageClick, toggleModal, loadMoBtn } = this;
+
     return (
-      <div>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          images={this.state.images}
-          onImageClick={this.handleImageClick}
+      <>
+        <div>
+          <Searchbar onSubmit={handleFormSubmit} />
+
+          <ImageGallery images={images} onImageClick={handleImageClick} />
+          {this.state.showModal && (
+            <Modal showModal={showModal} tags={alt} onClose={toggleModal} />
+          )}
+          {images.length > 0 && <Button onClick={loadMoBtn} />}
+          {loading && <Spinner />}
+        </div>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
         />
-        {this.state.showModal && (
-          <Modal
-            showModal={this.state.showModal}
-            tags={this.state.alt}
-            onClose={this.toggleModal}
-          />
-        )}
-        {this.state.images.length > 0 && <Button onClick={this.loadMoBtn} />}
-      </div>
+      </>
     );
   }
 }
