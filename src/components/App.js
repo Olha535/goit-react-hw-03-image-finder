@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
 import fetchImages from '../services/api-service';
 import Searchbar from './Searchbar';
@@ -35,16 +36,9 @@ export default class App extends Component {
         this.setState({ loading: true });
         const images = await fetchImages(nextSearch, nextPage);
         if (!images.length) {
-          // toast.dismiss();
-          // toast.configure();
           toast.info('Check the correctness of the input', {
-            position: toast.POSITION.TOP_RIGHT,
             theme: 'colored',
           });
-          //   toast.info('Check the correctness of the input', {
-          //     // theme: 'colored',
-          //     // position: 'top-right',
-          //   });
         }
         this.setState(prevState => ({
           images: [...prevState.images, ...images],
