@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { v4 as uuidv4 } from 'uuid';
 import s from './ImageGallery.module.css';
 import ImageGalleryItem from '../ImageGalleryItem';
 
@@ -8,7 +9,7 @@ export default function ImageGallery({ images, onImageClick }) {
     <ul className={s.imageGallery}>
       {images.map(({ id, webformatURL, tags, largeImageURL }) => (
         <ImageGalleryItem
-          key={id}
+          key={`${id}-${uuidv4()}`}
           image={webformatURL}
           tags={tags}
           onImageClick={() => onImageClick(largeImageURL, tags)}

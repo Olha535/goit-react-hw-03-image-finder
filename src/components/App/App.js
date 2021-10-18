@@ -35,6 +35,7 @@ export default class App extends Component {
       try {
         this.setState({ loading: true });
         const images = await fetchImages(nextSearch, nextPage);
+
         if (!images.length) {
           toast.info('Check the correctness of the input', {
             theme: 'colored',
@@ -47,7 +48,7 @@ export default class App extends Component {
         this.setState({ error });
         toast.error(this.state.error.message, { theme: 'colored' });
       } finally {
-        if (prevState.images.length > 10) {
+        if (prevState.images.length > 11) {
           window.scrollTo({
             top: document.documentElement.scrollHeight,
             behavior: 'smooth',
@@ -67,6 +68,10 @@ export default class App extends Component {
   };
 
   loadMoBtn = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'smooth',
+    });
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
@@ -105,9 +110,9 @@ export default class App extends Component {
       <>
         <div className="App">
           <Searchbar onSubmit={handleFormSubmit} />
-
+          <Spinner />
           <ImageGallery images={images} onImageClick={handleImageClick} />
-          {this.state.showModal && (
+          {showModal && (
             <Modal showModal={showModal} tags={alt} onClose={toggleModal} />
           )}
           {images.length > 0 && <Button onClick={loadMoBtn} />}
