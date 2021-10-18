@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PropTypes from 'prop-types';
-import fetchImages from '../services/api-service';
-import Searchbar from './Searchbar';
-import ImageGallery from './ImageGallery';
-import Button from './Button';
-import Modal from './Modal';
-import Spinner from './Loader';
+import fetchImages from '../../services/api-service';
+import Searchbar from '../Searchbar';
+import ImageGallery from '../ImageGallery';
+import Button from '../Button';
+import Modal from '../Modal';
+import Spinner from '../Loader';
 
 export default class App extends Component {
   static propTypes = {
@@ -103,7 +103,7 @@ export default class App extends Component {
 
     return (
       <>
-        <div>
+        <div className="App">
           <Searchbar onSubmit={handleFormSubmit} />
 
           <ImageGallery images={images} onImageClick={handleImageClick} />

@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import s from './ImageGalleryItem.module.css';
 
 export default function ImageGalleryItem({ image, tags, onImageClick }) {
   return (
-    <li className="ImageGalleryItem">
+    <li className={s.ImageGalleryItem}>
       <img
         src={image}
         alt={tags}
         onClick={onImageClick}
-        className="ImageGalleryItem-image"
+        className={s.ImageGalleryItemImage}
       />
     </li>
   );
