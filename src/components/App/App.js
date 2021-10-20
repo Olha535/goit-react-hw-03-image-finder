@@ -68,10 +68,6 @@ export default class App extends Component {
   };
 
   loadMoBtn = () => {
-    window.scrollTo({
-      top: document.documentElement.scrollHeight,
-      behavior: 'smooth',
-    });
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
@@ -111,7 +107,10 @@ export default class App extends Component {
         <div className="App">
           <Searchbar onSubmit={handleFormSubmit} />
           <Spinner />
-          <ImageGallery images={images} onImageClick={handleImageClick} />
+          {images.length > 1 && (
+            <ImageGallery images={images} onImageClick={handleImageClick} />
+          )}
+
           {showModal && (
             <Modal showModal={showModal} tags={alt} onClose={toggleModal} />
           )}

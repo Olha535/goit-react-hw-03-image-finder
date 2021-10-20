@@ -18,5 +18,5 @@ export default function ImageGalleryItem({ image, tags, onImageClick }) {
 ImageGalleryItem.propTypes = {
   tags: PropTypes.string,
   image: PropTypes.string.isRequired,
-  onImageClick: PropTypes.func,
+  onImageClick: PropTypes.func.isRequired,
 };
